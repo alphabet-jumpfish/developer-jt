@@ -1,0 +1,107 @@
+#开发配置
+spring:
+
+  jackson: # 这就是返回时间戳配置
+    serialization: # 这就是返回时间戳配置
+      write-dates-as-timestamps: true   # 这就是返回时间戳配置
+
+  datasource:
+    dynamic:
+      # 设置默认的数据源或者数据源组,默认值即为master
+      primary: master
+      # 严格匹配数据源,默认false.true未匹配到指定数据源时抛异常,false使用默认数据源
+      strict: false
+      datasource:
+        master:
+          url: jdbc:mysql://127.0.0.1:3306/developer-monitors?allowMultiQueries=true&characterEncoding=utf8&useUnicode=true&autoReconnect=true&useAffectedRows=true&useSSL=false&serverTimezone=Asia/Shanghai
+          username: root
+          password: root
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          ##druid
+          type: com.alibaba.druid.pool.DruidDataSource
+          # 下面为连接池的补充设置，应用到上面所有数据源中
+          # 初始化大小，最小，最大
+          initialSize: 10
+          minIdle: 2
+          maxActive: 500
+          # 配置获取连接等待超时的时间
+          maxWait: 10000
+          # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+          timeBetweenEvictionRunsMillis: 10
+          # 配置一个连接在池中最小生存的时间，单位是毫秒
+          minEvictableIdleTimeMillis: 10
+          validationQuery: select 'x'
+          testWhileIdle: true
+          testOnBorrow: false
+          testOnReturn: false
+          ##对于长时间不使用的连接强制关闭
+          removeAbandoned: true
+          removeAbandonedTimeout: 1000
+          logAbandoned: true
+          #是否缓存preparedStatement，也就是PSCache，在mysql5.5以下的版本中没有PSCache功能，建议关闭掉
+          poolPreparedStatements: false
+          ##要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。
+          maxPoolPreparedStatementPerConnectionSize: 3
+          # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+          filters: stat,wall,slf4j
+          ## 合并多个DruidDataSource的监控数据
+          useGlobalDataSourceStat: true
+        slave_1:
+          url: jdbc:mysql://127.0.0.1:3306/developer-monitors?allowMultiQueries=true&characterEncoding=utf8&useUnicode=true&autoReconnect=true&useAffectedRows=true&useSSL=false&serverTimezone=Asia/Shanghai
+          username: root
+          password: root
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          ##druid
+          type: com.alibaba.druid.pool.DruidDataSource
+          # 下面为连接池的补充设置，应用到上面所有数据源中
+          # 初始化大小，最小，最大
+          initialSize: 10
+          minIdle: 2
+          maxActive: 500
+          # 配置获取连接等待超时的时间
+          maxWait: 10000
+          # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+          timeBetweenEvictionRunsMillis: 10
+          # 配置一个连接在池中最小生存的时间，单位是毫秒
+          minEvictableIdleTimeMillis: 10
+          validationQuery: select 'x'
+          testWhileIdle: true
+          testOnBorrow: false
+          testOnReturn: false
+          ##对于长时间不使用的连接强制关闭
+          removeAbandoned: true
+          removeAbandonedTimeout: 1000
+          logAbandoned: true
+          #是否缓存preparedStatement，也就是PSCache，在mysql5.5以下的版本中没有PSCache功能，建议关闭掉
+          poolPreparedStatements: false
+          ##要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。
+          maxPoolPreparedStatementPerConnectionSize: 3
+          # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+          filters: stat,wall,slf4j
+          ## 合并多个DruidDataSource的监控数据
+          useGlobalDataSourceStat: true
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  ### REDIS
+  redis:
+    database: 0
+    host: 127.0.0.1
+    password: root
+    port: 6379
+    timeOut: 2000
+    jedis:
+      pool:
+        max-idle: 1000
+        max-total: 1000
+        max-wait-millis: 100
+
+feign:
+  url:
+    oauth: 127.0.0.1:19011
+
+logging:
+  config: classpath:logback-develpoer-monitors.xml

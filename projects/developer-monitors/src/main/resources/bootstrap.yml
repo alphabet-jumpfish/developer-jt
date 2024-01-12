@@ -1,0 +1,75 @@
+spring:
+  application:
+    name: develpoer-monitors
+  profiles:
+    active: dev
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  # spring-data-jpa 属性
+  jpa:
+    database: MySQL
+    show-sql: true # 控制台打印sql
+    hibernate:
+      ddl-auto: update # update代表数据库没有表的话，会先创建表，有表的话就不创建了
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL57Dialect
+
+#端口号
+server:
+  port: 19011
+  tomcat:
+    connection-timeout: 200000
+
+#公共配置与profiles选择无关
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  configuration:
+    local-cache-scope: statement
+    jdbc-type-for-null: null
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      insert-strategy: not_empty
+      update-strategy: not_empty
+      select-strategy: not_empty
+
+# feign配置
+feign:
+  # feign替换JDK默认的URLConnection为okhttp 可以提高qps
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+  #    # 最大连接数 默认200
+#    max-connections: 20480
+#    # 每个路由最大的连接数 默认是50
+#    max-connections-per-route: 512
+#    # 连接生存时间 默认是900
+#    time-to-live: 60
+#    # 连接超时时长 默认是2000
+#    connection-timeout: 60000
+  client:
+    config:
+      default:
+        # 日志级别
+        logger-level: BASIC
+        # 连接超时时间
+        connect-timeout: 60000
+        # 读取超时时间
+        read-timeout: 60000
+  # 请求与响应的压缩
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+      # 使用Gzip压缩
+      useGzipDecoder: true
+
+#服务超时及重试
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 5000
