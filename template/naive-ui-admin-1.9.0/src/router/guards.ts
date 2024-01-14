@@ -56,7 +56,21 @@ export function createRouterGuards(router: Router) {
       return;
     }
 
-    const userInfo = await userStore.getInfo();
+    // 用户信息获取
+    // const userInfo = await userStore.getInfo();
+
+
+    // 【developer-jt】【用户信息获取】
+    const uif = await userStore.gInfo();
+    let userInfo = {
+      permissions: []
+    }
+    userInfo.permissions = uif.data.authorities;
+    const im = {
+      label: '主控台',
+      value: 'dashboard_console'
+    };
+    userInfo.permissions = [im];
 
     const routes = await asyncRouteStore.generateRoutes(userInfo);
 

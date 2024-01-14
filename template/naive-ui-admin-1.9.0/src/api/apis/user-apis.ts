@@ -14,9 +14,25 @@ export interface BasicResponseModel<T = any> {
 export function login(params) {
   return http.request<BasicResponseModel>(
     {
-      url: '/developer/monitors/user-manager/login',
+      url: '/api/developer/monitors/user-manager/login',
       method: 'get',
       params,
+    },
+    {
+      isTransformResponse: false,
+    }
+  );
+}
+
+/**
+ * @description: 用户信息
+ */
+export function getUser(access_token) {
+  return http.request<BasicResponseModel>(
+    {
+      url: '/api/developer/monitors/access-user/getUser',
+      method: 'get',
+      params: { 'access_token': access_token }
     },
     {
       isTransformResponse: false,
