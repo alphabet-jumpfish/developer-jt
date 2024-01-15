@@ -48,12 +48,13 @@ public class UserManagerServiceImpl implements UserManagerService {
 
     @Override
     public Result<LoginDetailVO> login(String username, String password) {
-        UserPO user = userManagerGeneratorMapper.selectOne(
+
+        final UserPO user = userManagerGeneratorMapper.selectOne(
                 Wrappers.<UserPO>lambdaQuery().eq(UserPO::getLoginUsername, username)
                         .eq(UserPO::getIsDelete, IsDeleteEnum.NOT_DELETE.getValue())
                         .last("LIMIT 1")
         );
-        final String login_username = user.getLoginUsername();
+
         // 登陆操作
         AccessToken accessToken = null;
         try {
@@ -61,9 +62,12 @@ public class UserManagerServiceImpl implements UserManagerService {
             if (!encodePassword.equals(user.getLoginPassword())) {
                 throw new MicroBizException(DefaultResultCode.PASSWORD_ERROR.getCode(), "密码错误");
             }
+            final String login_username = user.getLoginUsername();
             accessToken = oAuth2Api.defaultGetToken(login_username, password);
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            log.info("登陆信息:获取认证信息失败:username:{},password:{}", username, password);
+            throw new MicroBizException(DefaultResultCode.AUTHORIZATION_FAILURE.getCode(), "账号密码错误");
         }
 
         if (accessToken != null && user != null) {

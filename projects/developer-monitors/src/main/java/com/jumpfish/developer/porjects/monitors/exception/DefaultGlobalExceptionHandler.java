@@ -1,9 +1,6 @@
 package com.jumpfish.developer.porjects.monitors.exception;
 
-import com.jumpfish.developer.porjects.monitors.common.result.DefaultResultCode;
-import com.jumpfish.developer.porjects.monitors.common.result.Result;
-import com.jumpfish.developer.porjects.monitors.common.result.ResultCode;
-import com.jumpfish.developer.porjects.monitors.common.result.ResultFactory;
+import com.jumpfish.developer.porjects.monitors.common.result.*;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -26,6 +23,23 @@ public class DefaultGlobalExceptionHandler {
             @Override
             public Integer getCode() {
                 return DefaultResultCode.FEIGN_REMOTE_CALL_FAILED.getCode();
+            }
+
+            @Override
+            public String getMessage() {
+                return e.getMessage();
+            }
+        });
+    }
+
+    @ExceptionHandler({MicroBizException.class})
+    @ResponseStatus(HttpStatus.OK)
+    public Result microBizException(HttpServletRequest request, MicroBizException e) {
+
+        return ResultFactory.of(new ResultCode() {
+            @Override
+            public Integer getCode() {
+                return e.getCode();
             }
 
             @Override
